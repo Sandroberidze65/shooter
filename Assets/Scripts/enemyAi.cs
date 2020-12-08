@@ -7,6 +7,7 @@ public class enemyAi : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] float chaseRange = 5f;
+    [SerializeField] float turnSpeed=5f;
 
     NavMeshAgent navMeshAgent;
     float distanceToTarget = Mathf.Infinity;
@@ -19,6 +20,7 @@ public class enemyAi : MonoBehaviour
     }
     private void EngageTarget()
     {
+        FaceTarget(); 
         if (distanceToTarget > navMeshAgent.stoppingDistance)
         {
             ChaseTarget();
@@ -33,11 +35,16 @@ public class enemyAi : MonoBehaviour
         navMeshAgent.SetDestination(target.position);
         GetComponent<Animator>().SetBool("attack", false);
         GetComponent<Animator>().SetTrigger("move");
-
-
     }
+    private void FaceTarget(){
+        Vector3 direction=(target.position-transform.position).normalized;
+        Quaternion lookRotation=Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation=Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime*turnSpeed);
+    }
+
     private void AttackTarget()
     {
+          
         GetComponent<Animator>().SetBool("attack", true);
     }
     // Start is called before the first frame update
