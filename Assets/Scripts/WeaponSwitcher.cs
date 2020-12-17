@@ -10,6 +10,7 @@ public class WeaponSwitcher : MonoBehaviour
     {
         SetWaeponActive();
     }
+    
 
     private void SetWaeponActive(){
         int weaponIndex=0;
@@ -45,13 +46,13 @@ public class WeaponSwitcher : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha2)){
             currentWeapon=1; 
         }
-        // if(Input.GetKeyDown(KeyCode.Alpha3)){
-        //     currentWeapon=2; 
-        // }
+        if(Input.GetKeyDown(KeyCode.Alpha3)){
+             currentWeapon=2; 
+        }
     }
 
     private void ProccessScrollWheel(){
-        if(Input.GetAxis("Mouse ScrollWheel")>0){
+        if(Input.GetAxis("Mouse ScrollWheel")<0){
             if(currentWeapon>=transform.childCount-1){
                 currentWeapon=0;
             }else
@@ -59,7 +60,7 @@ public class WeaponSwitcher : MonoBehaviour
                 currentWeapon++;
             }
         }
-        if(Input.GetAxis("Mouse ScrollWheel")<0){
+        if(Input.GetAxis("Mouse ScrollWheel")>0){
             if(currentWeapon<=0){
                 currentWeapon=transform.childCount-1;
             }else
