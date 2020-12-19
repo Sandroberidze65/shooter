@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GranadeThrow : MonoBehaviour
 {
-    public float throwForce = 10f;
+    public float throwForce = 40f;
     public GameObject grenadePrefab;
 
     int MaxGrenage = 5;
