@@ -7,7 +7,7 @@ public class enemyAi : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] float chaseRange = 15f;
-    [SerializeField] float turnSpeed=5f;
+    [SerializeField] float turnSpeed=11f;
 
     NavMeshAgent navMeshAgent;
     float distanceToTarget = Mathf.Infinity;
@@ -16,6 +16,10 @@ public class enemyAi : MonoBehaviour
     EnemyHealth health;
     public Transform[] moveSpots;
     private int randomSpot;
+    private bool walkPointSet;
+    private Vector3 walkPoint;
+    private int walkPointRange=15;
+    public LayerMask whatIsGround;
 
     private void OnDrawGizmos()
     {
@@ -48,10 +52,35 @@ public class enemyAi : MonoBehaviour
     }
     private void patrol()
     {
-        Debug.Log("patrol");
-        transform.position = Vector2.MoveTowards(transform.position, moveSpots[randomSpot].position, turnSpeed);
+        if (!walkPointSet) { SearchWalkPoint();  }
+        
+        if (walkPointSet)
+        {
+            navMeshAgent.SetDestination(walkPoint);
+
+
+            Vector3 distanceToWalkPoint = transform.position - walkPoint;
+
+            if (distanceToWalkPoint.magnitude < 1f)
+            {
+                
+                walkPointSet = false;
+                Debug.Log(walkPointSet);
+            }
+        }
+        //transform.position = Vector2.MoveTowards(transform.position, moveSpots[randomSpot].position, turnSpeed);
         //GetComponent<Animator>().SetTrigger("move");
     }
+    private void SearchWalkPoint()
+    {
+        
+        float randomZ = Random.Range(-walkPointRange, walkPointRange);
+        float randomX = Random.Range(-walkPointRange, walkPointRange);
+        walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
+        if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
+        walkPointSet = true;
+    }
+
     private void FaceTarget(){
         Vector3 direction=(target.position-transform.position).normalized;
         Quaternion lookRotation=Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
